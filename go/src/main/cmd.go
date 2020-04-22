@@ -9,7 +9,9 @@ type Cmd struct {
 	helpFlag    bool   //java -help
 	versionFlag bool   //java -version
 	cpOption    string
-	class       string // 执行主类
+	XjreOption  string  // 指定jre启动类的目录
+	testOption  string  // 指定测试方法
+	class       string  // 执行主类
 	args        []string // 附加参数
 }
 
@@ -23,6 +25,9 @@ func parseCmd() *Cmd {
 	flag.BoolVar(&cmd.versionFlag, "version", false, "print version and exit")
 	flag.StringVar(&cmd.cpOption, "classpath", "", "classpath")
 	flag.StringVar(&cmd.cpOption, "cp", "", "classpath")
+	//增加测试方法
+	flag.StringVar(&cmd.testOption, "test", "", "test")
+	flag.StringVar(&cmd.XjreOption,"Xjre","","path to jre")
 	//parse失败 会执行 printUsage
 	flag.Parse()
 

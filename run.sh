@@ -1,12 +1,14 @@
 #!/bin/sh
 set -ex
 
+cd ./go
 export GOPATH=$PWD
 
 # export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/
-go run . -version | grep -q "version 0.0.1"
 
-go run . -version | grep -q "version 0.0.1"
+go run main -version
+go run main -test "cmd" 12 344 567
+go run main -test "classpath" java.lang.Object
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"
