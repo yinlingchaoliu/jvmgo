@@ -23,7 +23,7 @@ func parseCmd() *Cmd {
 	flag.BoolVar(&cmd.versionFlag, "version", false, "print version and exit")
 	flag.StringVar(&cmd.cpOption, "classpath", "", "classpath")
 	flag.StringVar(&cmd.cpOption, "cp", "", "classpath")
-	//解析
+	//parse失败 会执行 printUsage
 	flag.Parse()
 
 	//解析剩余参数
@@ -36,6 +36,7 @@ func parseCmd() *Cmd {
 	return cmd
 }
 
+//使用范例
 func printUsage() {
 	fmt.Printf("Usage: %s [-options] class [args...]\n", os.Args[0])
 }
