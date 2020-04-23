@@ -9,6 +9,7 @@ export GOPATH=$PWD
 go run main -version
 go run main -test "cmd" 12 344 567
 go run main -test "classpath" java.lang.Object
+go run main -test "classfile" java.lang.Object
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"
