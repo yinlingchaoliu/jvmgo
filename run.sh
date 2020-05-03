@@ -4,17 +4,22 @@ set -ex
 cd ./go
 export GOPATH=$PWD
 
+# 设置javahome
 # export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/
 
-go run main -version
-go run main -test "cmd" 12 344 567
-go run main -test "classpath" java.lang.Object
-go run main -test "classfile" java.lang.Object
+#go run main -version # 测试cmd
+#go run main -test "cmd" 12 344 567  # 测试cmd
+#go run main -test "classpath" java.lang.Object # 测试搜索类路径
+#go run main -test "classfile" java.lang.Object # 测试加载classfile
+
+#go run main -test "rtda" "anystring"  #测试 运行时数据
+
+go run main -test "interpret" -cp test/lib/example.jar jvmgo.book.ch05.GaussTest
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"
 #go run jvmgo/ch04 java.lang.Object 2>&1 | grep -q "100"
-#go run jvmgo/ch05 -cp ../java/example.jar jvmgo.book.ch05.GaussTest 2>&1 | grep -q "5050"
+#go run main -cp ../java/example.jar jvmgo.book.ch05.GaussTest 2>&1 | grep -q "5050"
 #go run jvmgo/ch06 -cp ../java/example.jar jvmgo.book.ch06.MyObject | grep -q "32768"
 #go run jvmgo/ch07 -cp ../java/example.jar jvmgo.book.ch07.FibonacciTest | grep -q "832040"
 #go run jvmgo/ch08 -cp ../java/example.jar jvmgo.book.ch01.HelloWorld  | grep -q "Hello, world!"
@@ -27,6 +32,6 @@ go run main -test "classfile" java.lang.Object
 #go run jvmgo/ch10 -cp ../java/example.jar jvmgo.book.ch10.ParseIntTest 123 | grep -q "123"
 #go run jvmgo/ch10 -cp ../java/example.jar jvmgo.book.ch10.ParseIntTest abc 2>&1 | grep  'For input string: "abc"'
 #go run jvmgo/ch10 -cp ../java/example.jar jvmgo.book.ch10.ParseIntTest 2>&1 | grep -q "at jvmgo"
-#go run jvmgo/ch11 -cp ../java/example.jar jvmgo.book.ch01.HelloWorld  | grep -q "Hello, world!"
+#go run main -cp ../java/example.jar jvmgo.book.ch01.HelloWorld  | grep -q "Hello, world!"
 #
 echo OK

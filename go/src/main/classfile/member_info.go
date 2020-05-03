@@ -38,6 +38,7 @@ func (self *MemberInfo) Descriptor() string {
 	return self.cp.getUtf8(self.descriptorIndex)
 }
 
+//获得code属性
 func (self *MemberInfo) CodeAttribute() *CodeAttribute {
 	for _, attrInfo := range self.attributes {
 		switch attrInfo.(type) {

@@ -4,6 +4,7 @@ import "flag"
 import "fmt"
 import "os"
 
+//命令行
 // java [-options] class [args...]
 type Cmd struct {
 	helpFlag    bool   //java -help
