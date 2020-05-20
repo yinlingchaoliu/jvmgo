@@ -30,12 +30,14 @@ func newConstantPool(class *Class, cfCp classfile.ConstantPool) *ConstantPool {
 			consts[i] = cpInfo.(*classfile.ConstantIntegerInfo).Value()
 		case *classfile.ConstantFloatInfo:
 			consts[i] = cpInfo.(*classfile.ConstantFloatInfo).Value()
+			//long double 直接放入, 占2个位置
 		case *classfile.ConstantLongInfo:
 			consts[i] = cpInfo.(*classfile.ConstantLongInfo).Value()
 			i++
 		case *classfile.ConstantDoubleInfo:
 			consts[i] = cpInfo.(*classfile.ConstantDoubleInfo).Value()
 			i++
+			//不存放字符串本身，存常量池索引，指向一个CONSTANT_Utf8_info常量
 		case *classfile.ConstantStringInfo:
 			consts[i] = cpInfo.(*classfile.ConstantStringInfo).String()
 			// 符号引用：类、字段、方法、接口方法

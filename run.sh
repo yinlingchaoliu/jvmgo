@@ -14,7 +14,9 @@ export GOPATH=$PWD
 
 #go run main -test "rtda" "anystring"  #测试 运行时数据
 
-go run main -test "interpret" -cp test/lib/example.jar jvmgo.book.ch05.GaussTest
+#go run main -test "interpret" -cp test/lib/example.jar jvmgo.book.ch05.GaussTest #测试解释器
+
+go run main -test "classloader" -cp test/lib/example.jar jvmgo.book.ch06.MyObject #测试classloader
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"

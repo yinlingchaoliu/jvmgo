@@ -1,5 +1,7 @@
 package heap
 
+//层次结构
+
 // other是self的子类
 // other实现了self接口
 func (self *Class) isAssignableFrom(other *Class) bool {

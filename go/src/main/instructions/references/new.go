@@ -15,6 +15,7 @@ func (self *NEW) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()            // 1. 获取当前栈帧所在类的常量池
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef) // 2. 获取类符号引用
 	class := classRef.ResolvedClass()                      // 3. 根据类符号引用创建类
+
 	if !class.InitStarted() {
 		frame.RevertNextPC()
 		base.InitClass(frame.Thread(), class)

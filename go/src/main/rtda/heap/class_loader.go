@@ -32,7 +32,8 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	data, entry := self.readClass(name) // 1. 找到class文件并读取为 byte[]
 	class := self.defineClass(data)     // 2. byte[] -> ClassFile -> Class，并放入方法区
 	link(class)                         // 3. 进行链接
-	fmt.Printf("[Loaded %s from %s]\n", name, entry)
+	//todo 加载classloader 加载class和对应jar
+	fmt.Printf("[loadNonArrayClass Loaded %s from %s]\n", name, entry)
 	return class
 }
 
@@ -45,7 +46,7 @@ func (self *ClassLoader) readClass(name string) ([]byte, classpath.Entry) {
 }
 
 func (self *ClassLoader) defineClass(data []byte) *Class {
-	class := parseClass(data)
+	class := parseClass(data)		  //byte->class
 	class.loader = self
 	resolveSuperClass(class)          // 递归加载父类
 	resolveInterfaces(class)          // 递归加载接口类

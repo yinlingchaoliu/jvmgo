@@ -47,6 +47,7 @@ func (self *ClassMember) IsProtected() bool {
 	return 0 != self.accessFlags&ACC_PROTECTED
 }
 
+// 判断是否为static类
 func (self *ClassMember) IsStatic() bool {
 	return 0 != self.accessFlags&ACC_STATIC
 }

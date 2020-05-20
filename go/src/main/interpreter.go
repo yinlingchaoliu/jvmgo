@@ -6,10 +6,11 @@ import (
 	"main/instructions"
 	"main/instructions/base"
 	"main/rtda"
+	"main/rtda/heap"
 )
 
 //解释器 外部不能访问 私有方法
-func interpret(methodInfo *classfile.MemberInfo){
+func interpretInfo(methodInfo *classfile.MemberInfo){
 
 	//获得method类 code属性
 	codeAttr := methodInfo.CodeAttribute()
@@ -26,12 +27,23 @@ func interpret(methodInfo *classfile.MemberInfo){
 	loop(thread, bytecode)
 }
 
+//解释器
+func interpret(method *heap.Method){
+	thread:= rtda.NewTread()
+	frame:=thread.NewFrame(method)
+	thread.PushFrame(frame)
+	defer catchErr(frame)
+	loop(thread,method.Code())
+}
+
+
 //异常处理 因没有实现return指令 catch异常
 func catchErr(frame *rtda.Frame){
 	if r:=recover();r!=nil{
-		fmt.Printf("LocalVars:%v\n",frame.LocalVars())
-		fmt.Printf("OperandStack:%v\n",frame.OperandStack())
-		fmt.Printf("no return fun \n")
+		//todo catchErr 异常处理
+		fmt.Printf("[catchErr LocalVars:%v]\n",frame.LocalVars())
+		fmt.Printf("[catchErr OperandStack:%v]\n",frame.OperandStack())
+		fmt.Printf("[catchErr no return fun]\n")
 		//panic(r)
 	}
 }
@@ -58,8 +70,8 @@ func loop(thread *rtda.Thread, bytecode []byte){
 		//获得下一个指令集便宜
 		frame.SetNextPC(reader.PC())
 
-		//excute   执行
-		fmt.Printf("pc:%2d inst:%T %v\n", pc, inst, inst)
+		//todo  excute   执行
+		fmt.Printf("[loop pc:%2d inst:%T %v]\n", pc, inst, inst)
 		inst.Execute(frame)
 	}
 

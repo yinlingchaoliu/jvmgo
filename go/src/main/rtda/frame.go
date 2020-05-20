@@ -20,8 +20,8 @@ func newFrame(thread *Thread, method *heap.Method) *Frame {
 	return &Frame{
 		thread:       thread,
 		method:       method,
-		localVars:    newLocalVars(method.MaxLocals()),
-		operandStack: newOperandStack(method.MaxStack()),
+		localVars:    newLocalVars(method.MaxLocals()), //本地变量表
+		operandStack: newOperandStack(method.MaxStack()),//操作数栈
 	}
 }
 
