@@ -20,7 +20,7 @@ func newMethods(class *Class, cfMethods []*classfile.MemberInfo) []*Method {
 		methods[i].class = class
 		methods[i].copyMemberInfo(cfMethod)
 		methods[i].copyAttributes(cfMethod)
-		methods[i].calArgSlotCount()
+		methods[i].calArgSlotCount() //参数
 	}
 	return methods
 }
@@ -34,6 +34,7 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 }
 
 func (self *Method) calArgSlotCount() {
+	//解析函数描述
 	parsedDescriptor := parseMethodDescriptor(self.descriptor)
 	for _, paramType := range parsedDescriptor.parameterTypes {
 		self.argSlotCount++

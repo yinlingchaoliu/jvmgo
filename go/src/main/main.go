@@ -26,9 +26,11 @@ func main() {
 		parseRtda(cmd)
 	} else if cmd.testOption == "interpret" {
 		parseInterpret(cmd)
-	} else if cmd.testOption == "classloader"{
+	} else if cmd.testOption == "classloader" {
 		parseClassLoader(cmd)
-	}else {
+	} else if cmd.testOption == "return" {
+		parseReturn(cmd)
+	} else {
 		startJvm(cmd)
 	}
 }

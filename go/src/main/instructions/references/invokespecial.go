@@ -23,7 +23,8 @@ func (self *INVOKE_SPECIAL) Execute(frame *rtda.Frame) {
 	if resolveMethod.IsStatic() {
 		panic("java.lang.IncompatibleClassChangeError")
 	}
-	ref := frame.OperandStack().GetRefFromTop(resolveMethod.ArgSlotCount()) // 弹出 this 引用
+	// todo  resolveMethod.ArgSlotCount()-1 避免数组越界
+	ref := frame.OperandStack().GetRefFromTop(resolveMethod.ArgSlotCount()-1) // 弹出 this 引用
 	if ref == nil {
 		panic("java.lang.NullPointerException")
 	}

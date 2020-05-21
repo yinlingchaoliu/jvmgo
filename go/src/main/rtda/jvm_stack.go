@@ -31,7 +31,8 @@ func (self *Stack) top() *Frame {
 	if self._top == nil {
 		panic("jvm stack is empty")
 	}
-	return self.top()
+	//todo self._top
+	return self._top
 }
 
 //栈帧出栈

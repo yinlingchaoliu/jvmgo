@@ -6,8 +6,10 @@ import (
 	"main/rtda/heap"
 )
 
+
 // invokerFrame - 调用当前的方法的哪一个方法栈帧
 // method - 当前方法，即被 invokerFrame 调用的方法
+//todo 方法调用
 func InvokeMethod(invokerFrame *rtda.Frame, method *heap.Method) {
 	// 1.使用同一个线程为当前方法创建栈帧并压入线程栈顶
 	thread := invokerFrame.Thread()

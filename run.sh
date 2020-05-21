@@ -7,16 +7,30 @@ export GOPATH=$PWD
 # 设置javahome
 # export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/
 
-#go run main -version # 测试cmd
-#go run main -test "cmd" 12 344 567  # 测试cmd
-#go run main -test "classpath" java.lang.Object # 测试搜索类路径
-#go run main -test "classfile" java.lang.Object # 测试加载classfile
 
-#go run main -test "rtda" "anystring"  #测试 运行时数据
+# 测试cmd
+#go run main -version
+#go run main -test "cmd" 12 344 567
 
-#go run main -test "interpret" -cp test/lib/example.jar jvmgo.book.ch05.GaussTest #测试解释器
+# 测试搜索类路径
+#go run main -test "classpath" java.lang.Object
 
-go run main -test "classloader" -cp test/lib/example.jar jvmgo.book.ch06.MyObject #测试classloader
+# 测试加载classfile
+#go run main -test "classfile" java.lang.Object
+
+#测试 运行时数据
+#go run main -test "rtda" "anystring"
+
+#测试解释器
+#go run main -test "interpret" -cp test/lib/example.jar jvmgo.book.ch05.GaussTest
+
+##测试classloader
+#go run main -test "classloader" -cp test/lib/example.jar jvmgo.book.ch06.MyObject
+
+#测试函数调用返回
+go run main -verbose:class -verbose:inst  -test "return"  -cp test/lib/example.jar   jvmgo.book.ch07.InvokeDemo
+#go run main -verbose:class -verbose:inst  -test "return"  -cp test/lib/example.jar   jvmgo.book.ch07.FibonacciTest
+
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"

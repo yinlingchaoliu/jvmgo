@@ -7,15 +7,18 @@ import (
 )
 
 type ClassLoader struct {
-	cp       *classpath.Classpath // 用于搜索和读取 class 文件
-	classMap map[string]*Class    // 已经加载的类数据，key=全限定类名
+	cp          *classpath.Classpath // 用于搜索和读取 class 文件
+	verboseFlag bool                 // 打印classloader信息
+	classMap    map[string]*Class    // 已经加载的类数据，key=全限定类名
 }
 
 // 创建一个类加载器
-func NewClassLoader(cp *classpath.Classpath) *ClassLoader {
+//todo 添加测试信息
+func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
 	return &ClassLoader{
-		cp:       cp,
-		classMap: make(map[string]*Class),
+		cp:          cp,
+		verboseFlag: verboseFlag, //添加测试标志
+		classMap:    make(map[string]*Class),
 	}
 }
 
@@ -33,7 +36,9 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	class := self.defineClass(data)     // 2. byte[] -> ClassFile -> Class，并放入方法区
 	link(class)                         // 3. 进行链接
 	//todo 加载classloader 加载class和对应jar
-	fmt.Printf("[loadNonArrayClass Loaded %s from %s]\n", name, entry)
+	if self.verboseFlag {
+		fmt.Printf("[loadNonArrayClass Loaded %s from %s]\n", name, entry)
+	}
 	return class
 }
 
@@ -46,7 +51,7 @@ func (self *ClassLoader) readClass(name string) ([]byte, classpath.Entry) {
 }
 
 func (self *ClassLoader) defineClass(data []byte) *Class {
-	class := parseClass(data)		  //byte->class
+	class := parseClass(data) //byte->class
 	class.loader = self
 	resolveSuperClass(class)          // 递归加载父类
 	resolveInterfaces(class)          // 递归加载接口类
@@ -105,7 +110,7 @@ func calcInstanceFieldSlotIds(class *Class) {
 	for _, field := range class.fields {
 		if !field.IsStatic() {
 			field.slotId = slotId
-			slotId ++
+			slotId++
 			if field.isLongOrDouble() {
 				slotId++
 			}
@@ -120,7 +125,7 @@ func calcStaticFieldSlotIds(class *Class) {
 	for _, field := range class.fields {
 		if field.IsStatic() {
 			field.slotId = slotId
-			slotId ++
+			slotId++
 			if field.isLongOrDouble() {
 				slotId++
 			}

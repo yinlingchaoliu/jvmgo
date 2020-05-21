@@ -50,3 +50,10 @@ func lookupInterfaceMethod(iface *Class, name string, descriptor string) *Method
 	}
 	return lookupMethodInInterfaces(iface.interfaces, name, descriptor)
 }
+
+func (self *InterfaceMethodRef) ResolvedInterfaceMethod() *Method {
+	if self.method == nil {
+		self.resolveInterfaceMethodRef()
+	}
+	return self.method
+}

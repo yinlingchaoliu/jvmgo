@@ -9,13 +9,13 @@ func (self *Class) isAssignableFrom(other *Class) bool {
 		return true
 	}
 	if self.IsInterface() {
-		return other.isImplements(self)
+		return other.IsImplements(self)
 	} else {
 		return other.isSubClassOf(self)
 	}
 }
 
-func (self *Class) isImplements(iface *Class) bool {
+func (self *Class) IsImplements(iface *Class) bool {
 	for c := self; c != nil; c = c.superClass {
 		for _, i := range c.interfaces {
 			if i == iface || i.isSubInterfaceOf(iface) {

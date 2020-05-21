@@ -22,6 +22,7 @@ type LineNumberTableEntry struct {
 	lineNumber uint16
 }
 
+//todo 代码行号
 func (self *LineNumberTableAttribute) readInfo(reader *ClassReader) {
 	lineNumberTable := make([]*LineNumberTableEntry, reader.readUint16())
 	for i := range lineNumberTable {
@@ -30,4 +31,14 @@ func (self *LineNumberTableAttribute) readInfo(reader *ClassReader) {
 			lineNumber: reader.readUint16(),
 		}
 	}
+}
+
+func (self *LineNumberTableAttribute) GetLineNumber(pc int) int {
+	for i := len(self.lineNumberTable) - 1; i >= 0; i-- {
+		entry := self.lineNumberTable[i]
+		if pc >= int(entry.startPc) {
+			return int(entry.lineNumber)
+		}
+	}
+	return -1
 }
