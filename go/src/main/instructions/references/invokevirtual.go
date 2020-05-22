@@ -41,23 +41,28 @@ func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame) {
 func _println(stack *rtda.OperandStack, descriptor string) {
 	switch descriptor {
 	case "(Z)V":
-		fmt.Printf("%v\n", stack.PopInt() != 0)
+		fmt.Printf("[hack_println: %v ]\n", stack.PopInt() != 0)
 	case "(C)V":
-		fmt.Printf("%c\n", stack.PopInt())
+		fmt.Printf("[hack_println: %c ]\n", stack.PopInt())
 	case "(B)V":
-		fmt.Printf("%v\n", stack.PopInt())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopInt())
 	case "(S)V":
-		fmt.Printf("%v\n", stack.PopInt())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopInt())
 	case "(I)V":
-		fmt.Printf("%v\n", stack.PopInt())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopInt())
 	case "(J)V":
-		fmt.Printf("%v\n", stack.PopLong())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopLong())
 	case "(F)V":
-		fmt.Printf("%v\n", stack.PopFloat())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopFloat())
 	case "(D)V":
-		fmt.Printf("%v\n", stack.PopDouble())
+		fmt.Printf("[hack_println: %v ]\n", stack.PopDouble())
+	case "(Ljava/lang/String;)V":
+		jStr := stack.PopRef()
+		//将内存字符串utf-16 转化为utf-8
+		goStr := heap.GoString(jStr)
+		fmt.Printf("[hack_println: %s ]\n", goStr)
 	default:
-		panic("println: " + descriptor)
+		panic("[hack_println: " + descriptor+ " ]")
 	}
 	stack.PopRef()
 }

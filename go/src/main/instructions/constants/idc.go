@@ -3,6 +3,7 @@ package constants
 import (
 	"main/instructions/base"
 	"main/rtda"
+	"main/rtda/heap"
 )
 
 type LDC struct {
@@ -43,6 +44,7 @@ func (self *LDC2_W) Execute(frame *rtda.Frame) {
 func _ldc(frame *rtda.Frame, index uint) {
 	// 1. 从运行时常量池获取常量c
 	stack := frame.OperandStack()
+	class := frame.Method().Class()
 	cp := frame.Method().Class().ConstantPool()
 	c := cp.GetConstant(index)
 
@@ -52,7 +54,9 @@ func _ldc(frame *rtda.Frame, index uint) {
 		stack.PushInt(c.(int32))
 	case float32:
 		stack.PushFloat(c.(float32))
-	//case string:
+	case string:  //todo 支持字符串 压栈
+		internedStr := heap.JString(class.Loader(),c.(string))
+		stack.PushRef(internedStr)
 	//case *heap.ClassRef:
 	default:
 		panic("todo:ldc!")

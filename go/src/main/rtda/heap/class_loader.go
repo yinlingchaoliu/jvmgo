@@ -27,6 +27,13 @@ func (self *ClassLoader) LoadClass(name string) *Class {
 	if class, ok := self.classMap[name]; ok {
 		return class // 类已经加载
 	}
+
+	//数组类型
+	if name[0] == '['{
+		return self.loadArrayClass(name)
+	}
+
+	//非数组类型
 	return self.loadNonArrayClass(name) // 普通类的数据来自于class文件，数组类的数据是jvm在运行期间动态生成的
 }
 
@@ -39,6 +46,23 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	if self.verboseFlag {
 		fmt.Printf("[loadNonArrayClass Loaded %s from %s]\n", name, entry)
 	}
+	return class
+}
+
+
+func (self *ClassLoader) loadArrayClass(name string) *Class {
+	class := &Class{
+		accessFlags: ACC_PUBLIC, // todo
+		name:        name,
+		loader:      self,
+		initStarted: true,
+		superClass:  self.LoadClass("java/lang/Object"),
+		interfaces: []*Class{
+			self.LoadClass("java/lang/Cloneable"),
+			self.LoadClass("java/io/Serializable"),
+		},
+	}
+	self.classMap[name] = class
 	return class
 }
 
@@ -58,6 +82,8 @@ func (self *ClassLoader) defineClass(data []byte) *Class {
 	self.classMap[class.name] = class // 放入已加载列表
 	return class
 }
+
+
 
 // byte[] -> ClassFile -> Class
 func parseClass(data []byte) *Class {
@@ -166,9 +192,10 @@ func initStaticFinalVar(class *Class, field *Field) {
 		case "D": // double
 			val := cp.GetConstant(cpIndex).(float64)
 			vars.SetDouble(slotId, val)
-		case "Ljava/lang/String;":
-			panic("todo") // todo
-
+		case "Ljava/lang/String;": //todo 支持字符串
+			goStr := cp.GetConstant(cpIndex).(string)
+			jStr := JString(class.Loader(),goStr)
+			vars.SetRef(slotId,jStr)
 		}
 	}
 }

@@ -30,6 +30,10 @@ func main() {
 		parseClassLoader(cmd)
 	} else if cmd.testOption == "return" {
 		parseReturn(cmd)
+	} else if cmd.testOption == "array" {
+		parseArray(cmd)
+	} else if cmd.testOption == "string" {
+		parseStringArgs(cmd)
 	} else {
 		startJvm(cmd)
 	}

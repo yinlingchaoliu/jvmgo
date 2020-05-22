@@ -28,8 +28,19 @@ export GOPATH=$PWD
 #go run main -test "classloader" -cp test/lib/example.jar jvmgo.book.ch06.MyObject
 
 #测试函数调用返回
-go run main -verbose:class -verbose:inst  -test "return"  -cp test/lib/example.jar   jvmgo.book.ch07.InvokeDemo
+#go run main -verbose:class -verbose:inst  -test "return"  -cp test/lib/example.jar   jvmgo.book.ch07.InvokeDemo
 #go run main -verbose:class -verbose:inst  -test "return"  -cp test/lib/example.jar   jvmgo.book.ch07.FibonacciTest
+
+#数组功能测试  打印加载类 指令信息
+#go run main   -test "array"  -cp test/lib/example.jar   jvmgo.book.ch08.BubbleSortTest
+
+#测试字符串数组
+#go run main   -test "string"  -cp test/lib/example.jar   jvmgo.book.ch01.HelloWorld
+
+#测试字符串参数
+#go run main   -test "string"  -cp test/lib/example.jar   jvmgo.book.ch08.PrintArgs  'go jvm args' 'PrintArgs' 'Hello , World'
+
+
 
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"

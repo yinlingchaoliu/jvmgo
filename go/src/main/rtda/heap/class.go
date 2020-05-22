@@ -19,7 +19,7 @@ type Class struct {
 	instanceSlotCount uint          // 存放实例变量占据的空间大小（包含从父类继承来的实例变量）（其中long和double占两个slot）
 	staticSlotCount   uint          // 存放类变量占据的空间大小（只包含当前类的类变量）（其中long和double占两个slot）
 	staticVars        Slots         // 存放静态变量
-	initStarted       bool
+	initStarted       bool			//类初始化标志 todo
 }
 
 func newClass(cf *classfile.ClassFile) *Class {
@@ -63,6 +63,7 @@ func (self *Class) getStaticMethod(name string, descriptor string) *Method {
 	return nil
 }
 
+//todo 初始化执行方法 <clinit>
 func (self *Class) GetClinitMethod() *Method {
 	return self.getStaticMethod("<clinit>", "()V")
 }
@@ -114,3 +115,67 @@ func (self *Class) StartInit() {
 	self.initStarted = true
 }
 
+//todo 查到加载自身classloader
+func (self *Class) Loader() *ClassLoader {
+	return self.loader
+}
+
+// todo 增加arrayclass
+func (self *Class) ArrayClass() *Class {
+	arrayClassName := getArrayClassName(self.name)
+	return self.loader.LoadClass(arrayClassName)
+}
+
+
+func (self *Class) isJlObject() bool {
+	return self.name == "java/lang/Object"
+}
+
+func (self *Class) isJlCloneable() bool {
+	return self.name == "java/lang/Cloneable"
+}
+func (self *Class) isJioSerializable() bool {
+	return self.name == "java/io/Serializable"
+}
+
+// todo 反射支持
+// 根据字段名称和描述 查找
+func (self *Class) getField(name, descriptor string, isStatic bool) *Field {
+	for c := self; c != nil; c = c.superClass {
+		for _, field := range c.fields {
+			if field.IsStatic() == isStatic &&
+				field.name == name &&
+				field.descriptor == descriptor {
+
+				return field
+			}
+		}
+	}
+	return nil
+}
+
+//寻找函数
+func (self *Class) getMethod(name, descriptor string, isStatic bool) *Method {
+	for c := self; c != nil; c = c.superClass {
+		for _, method := range c.methods {
+			if method.IsStatic() == isStatic &&
+				method.name == name &&
+				method.descriptor == descriptor {
+
+				return method
+			}
+		}
+	}
+	return nil
+}
+
+// todo 支持反射 reflection
+func (self *Class) GetRefVar(fieldName, fieldDescriptor string) *Object {
+	field := self.getField(fieldName, fieldDescriptor, true)
+	return self.staticVars.GetRef(field.slotId)
+}
+
+func (self *Class) SetRefVar(fieldName, fieldDescriptor string, ref *Object) {
+	field := self.getField(fieldName, fieldDescriptor, true)
+	self.staticVars.SetRef(field.slotId, ref)
+}

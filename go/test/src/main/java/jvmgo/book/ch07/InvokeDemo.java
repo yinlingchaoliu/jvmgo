@@ -1,6 +1,5 @@
 package jvmgo.book.ch07;
 
-//函数调用与返回
 public class InvokeDemo implements Runnable {
 
     public static void main(String[] args) {
