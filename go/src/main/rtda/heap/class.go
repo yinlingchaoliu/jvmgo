@@ -20,6 +20,7 @@ type Class struct {
 	staticSlotCount   uint          // 存放类变量占据的空间大小（只包含当前类的类变量）（其中long和double占两个slot）
 	staticVars        Slots         // 存放静态变量
 	initStarted       bool			//类初始化标志 todo
+	jClass            *Object		// java.lang.Class实例
 }
 
 func newClass(cf *classfile.ClassFile) *Class {
@@ -52,7 +53,7 @@ func (self *Class) getPackageName() string {
 }
 
 func (self *Class) GetMainMethod() *Method {
-	return self.getStaticMethod("main", "([Ljava/lang/String;)V")
+	return self.GetStaticMethod("main", "([Ljava/lang/String;)V")
 }
 func (self *Class) getStaticMethod(name string, descriptor string) *Method {
 	for _, m := range self.methods {
@@ -65,7 +66,7 @@ func (self *Class) getStaticMethod(name string, descriptor string) *Method {
 
 //todo 初始化执行方法 <clinit>
 func (self *Class) GetClinitMethod() *Method {
-	return self.getStaticMethod("<clinit>", "()V")
+	return self.GetStaticMethod("<clinit>", "()V")
 }
 
 func (self *Class) IsPublic() bool {
@@ -178,4 +179,28 @@ func (self *Class) GetRefVar(fieldName, fieldDescriptor string) *Object {
 func (self *Class) SetRefVar(fieldName, fieldDescriptor string, ref *Object) {
 	field := self.getField(fieldName, fieldDescriptor, true)
 	self.staticVars.SetRef(field.slotId, ref)
+}
+
+//获得object
+func (self *Class) JClass() *Object {
+	return self.jClass
+}
+
+//获得JavaName  java.lang.String
+func (self *Class) JavaName() string {
+	return strings.Replace(self.name, "/", ".", -1)
+}
+
+//是否为基本数据类型
+func (self *Class) IsPrimitive() bool {
+	_, ok := primitiveTypes[self.name]
+	return ok
+}
+
+func (self *Class) GetStaticMethod(name, descriptor string) *Method {
+	return self.getMethod(name, descriptor, true)
+}
+
+func (self *Class) GetInstanceMethod(name, descriptor string) *Method {
+	return self.getMethod(name, descriptor, false)
 }

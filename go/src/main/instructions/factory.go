@@ -12,6 +12,7 @@ import . "main/instructions/math"
 import . "main/instructions/references"
 import . "main/instructions/stack"
 import . "main/instructions/stores"
+import . "main/instructions/reserved"
 
 // NoOperandsInstruction singletons
 var (
@@ -90,11 +91,11 @@ var (
 	pop  = &POP{}
 	pop2 = &POP2{}
 	dup  = &DUP{}
-	//dup_x1        = &DUP_X1{}
-	//dup_x2        = &DUP_X2{}
-	//dup2          = &DUP2{}
-	//dup2_x1       = &DUP2_X1{}
-	//dup2_x2       = &DUP2_X2{}
+	dup_x1        = &DUP_X1{}
+	dup_x2        = &DUP_X2{}
+	dup2          = &DUP2{}
+	dup2_x1       = &DUP2_X1{}
+	dup2_x2       = &DUP2_X2{}
 	swap = &SWAP{}
 	iadd = &IADD{}
 	ladd = &LADD{}
@@ -104,43 +105,43 @@ var (
 	lsub = &LSUB{}
 	fsub = &FSUB{}
 	dsub = &DSUB{}
-	//imul          = &IMUL{}
-	//lmul          = &LMUL{}
-	//fmul          = &FMUL{}
-	//dmul          = &DMUL{}
-	//idiv          = &IDIV{}
-	//ldiv          = &LDIV{}
-	//fdiv          = &FDIV{}
-	//ddiv          = &DDIV{}
+	imul          = &IMUL{}
+	lmul          = &LMUL{}
+	fmul          = &FMUL{}
+	dmul          = &DMUL{}
+	idiv          = &IDIV{}
+	ldiv          = &LDIV{}
+	fdiv          = &FDIV{}
+	ddiv          = &DDIV{}
 	irem = &IREM{}
 	lrem = &LREM{}
 	frem = &FREM{}
 	drem = &DREM{}
-	//ineg          = &INEG{}
-	//lneg          = &LNEG{}
-	//fneg          = &FNEG{}
-	//dneg          = &DNEG{}
-	//ishl          = &ISHL{}
-	//lshl          = &LSHL{}
-	//ishr          = &ISHR{}
-	//lshr          = &LSHR{}
-	//iushr         = &IUSHR{}
-	//lushr         = &LUSHR{}
+	ineg          = &INEG{}
+	lneg          = &LNEG{}
+	fneg          = &FNEG{}
+	dneg          = &DNEG{}
+	ishl          = &ISHL{}
+	lshl          = &LSHL{}
+	ishr          = &ISHR{}
+	lshr          = &LSHR{}
+	iushr         = &IUSHR{}
+	lushr         = &LUSHR{}
 	iand = &IAND{}
 	land = &LAND{}
-	//ior           = &IOR{}
-	//lor           = &LOR{}
-	//ixor          = &IXOR{}
-	//lxor          = &LXOR{}
-	//i2l           = &I2L{}
-	//i2f           = &I2F{}
-	//i2d           = &I2D{}
-	//l2i           = &L2I{}
-	//l2f           = &L2F{}
-	//l2d           = &L2D{}
-	//f2i           = &F2I{}
-	//f2l           = &F2L{}
-	//f2d           = &F2D{}
+	ior           = &IOR{}
+	lor           = &LOR{}
+	ixor          = &IXOR{}
+	lxor          = &LXOR{}
+	i2l           = &I2L{}
+	i2f           = &I2F{}
+	i2d           = &I2D{}
+	l2i           = &L2I{}
+	l2f           = &L2F{}
+	l2d           = &L2D{}
+	f2i           = &F2I{}
+	f2l           = &F2L{}
+	f2d           = &F2D{}
 	d2i = &D2I{}
 	d2l = &D2L{}
 	d2f = &D2F{}
@@ -162,7 +163,7 @@ var (
 	//athrow        = &ATHROW{}
 	//monitorenter  = &MONITOR_ENTER{}
 	//monitorexit   = &MONITOR_EXIT{}
-	//invoke_native = &INVOKE_NATIVE{}
+	invoke_native = &INVOKE_NATIVE{}
 )
 
 func NewInstruction(opcode byte) base.Instruction {
@@ -347,16 +348,16 @@ func NewInstruction(opcode byte) base.Instruction {
 		return pop2
 	case 0x59:
 		return dup
-	//case 0x5a:
-	//	return dup_x1
-	//case 0x5b:
-	//	return dup_x2
-	//case 0x5c:
-	//	return dup2
-	//case 0x5d:
-	//	return dup2_x1
-	//case 0x5e:
-	//	return dup2_x2
+	case 0x5a:
+		return dup_x1
+	case 0x5b:
+		return dup_x2
+	case 0x5c:
+		return dup2
+	case 0x5d:
+		return dup2_x1
+	case 0x5e:
+		return dup2_x2
 	case 0x5f:
 		return swap
 	case 0x60:
@@ -375,22 +376,22 @@ func NewInstruction(opcode byte) base.Instruction {
 		return fsub
 	case 0x67:
 		return dsub
-	//case 0x68:
-	//	return imul
-	//case 0x69:
-	//	return lmul
-	//case 0x6a:
-	//	return fmul
-	//case 0x6b:
-	//	return dmul
-	//case 0x6c:
-	//	return idiv
-	//case 0x6d:
-	//	return ldiv
-	//case 0x6e:
-	//	return fdiv
-	//case 0x6f:
-	//	return ddiv
+	case 0x68:
+		return imul
+	case 0x69:
+		return lmul
+	case 0x6a:
+		return fmul
+	case 0x6b:
+		return dmul
+	case 0x6c:
+		return idiv
+	case 0x6d:
+		return ldiv
+	case 0x6e:
+		return fdiv
+	case 0x6f:
+		return ddiv
 	case 0x70:
 		return irem
 	case 0x71:
@@ -399,58 +400,58 @@ func NewInstruction(opcode byte) base.Instruction {
 		return frem
 	case 0x73:
 		return drem
-	//case 0x74:
-	//	return ineg
-	//case 0x75:
-	//	return lneg
-	//case 0x76:
-	//	return fneg
-	//case 0x77:
-	//	return dneg
-	//case 0x78:
-	//	return ishl
-	//case 0x79:
-	//	return lshl
-	//case 0x7a:
-	//	return ishr
-	//case 0x7b:
-	//	return lshr
-	//case 0x7c:
-	//	return iushr
-	//case 0x7d:
-	//	return lushr
+	case 0x74:
+		return ineg
+	case 0x75:
+		return lneg
+	case 0x76:
+		return fneg
+	case 0x77:
+		return dneg
+	case 0x78:
+		return ishl
+	case 0x79:
+		return lshl
+	case 0x7a:
+		return ishr
+	case 0x7b:
+		return lshr
+	case 0x7c:
+		return iushr
+	case 0x7d:
+		return lushr
 	case 0x7e:
 		return iand
 	case 0x7f:
 		return land
-	//case 0x80:
-	//	return ior
-	//case 0x81:
-	//	return lor
-	//case 0x82:
-	//	return ixor
-	//case 0x83:
-	//	return lxor
+	case 0x80:
+		return ior
+	case 0x81:
+		return lor
+	case 0x82:
+		return ixor
+	case 0x83:
+		return lxor
 	case 0x84:
 		return &IINC{}
-	//case 0x85:
-	//	return i2l
-	//case 0x86:
-	//	return i2f
-	//case 0x87:
-	//	return i2d
-	//case 0x88:
-	//	return l2i
-	//case 0x89:
-	//	return l2f
-	//case 0x8a:
-	//	return l2d
-	//case 0x8b:
-	//	return f2i
-	//case 0x8c:
-	//	return f2l
-	//case 0x8d:
-	//	return f2d
+	case 0x85:
+		return i2l
+	case 0x86:
+		return i2f
+	case 0x87:
+		return i2d
+	case 0x88:
+		return l2i
+	case 0x89:
+		return l2f
+	case 0x8a:
+		return l2d
+	case 0x8b:
+		return f2i
+	case 0x8c:
+		return f2l
+	case 0x8d:
+		return f2d
 	case 0x8e:
 		return d2i
 	case 0x8f:
@@ -572,8 +573,8 @@ func NewInstruction(opcode byte) base.Instruction {
 	// case 0xc9:
 	// 	return &JSR_W{}
 	// case 0xca: breakpoint
-	//case 0xfe:
-	//	return invoke_native
+	case 0xfe:
+		return invoke_native //todo native 支持调用本地方法
 	// case 0xff: impdep2
 	default:
 		panic(fmt.Errorf("Unsupported opcode: 0x%x!", opcode))

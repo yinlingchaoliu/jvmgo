@@ -57,7 +57,10 @@ func _ldc(frame *rtda.Frame, index uint) {
 	case string:  //todo 支持字符串 压栈
 		internedStr := heap.JString(class.Loader(),c.(string))
 		stack.PushRef(internedStr)
-	//case *heap.ClassRef:
+	case *heap.ClassRef:
+		classRef := c.(*heap.ClassRef)
+		classObj := classRef.ResolvedClass().JClass()
+		stack.PushRef(classObj)
 	default:
 		panic("todo:ldc!")
 	}

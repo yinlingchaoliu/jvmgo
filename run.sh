@@ -7,7 +7,6 @@ export GOPATH=$PWD
 # 设置javahome
 # export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/
 
-
 # 测试cmd
 #go run main -version
 #go run main -test "cmd" 12 344 567
@@ -37,11 +36,20 @@ export GOPATH=$PWD
 #测试字符串数组
 #go run main   -test "string"  -cp test/lib/example.jar   jvmgo.book.ch01.HelloWorld
 
-#测试字符串参数
 #go run main   -test "string"  -cp test/lib/example.jar   jvmgo.book.ch08.PrintArgs  'go jvm args' 'PrintArgs' 'Hello , World'
 
+#测试本地方法调用
+#go run main    -cp test/lib/example.jar   jvmgo.book.ch09.GetClassTest
+#go run main    -cp test/lib/example.jar   jvmgo.book.ch09.StringTest
+#go run main    -cp test/lib/example.jar   jvmgo.book.ch09.ObjectTest
+#go run main    -cp test/lib/example.jar   jvmgo.book.ch09.CloneTest
+
+#classloader 加载顺序
+go run main   -verbose:class  -cp test/lib/example.jar   jvmgo.book.ch09.TestLoadClass
 
 
+# todo 自动装箱和拆箱 第九章不处理
+#go run main    -cp test/lib/example.jar   jvmgo.book.ch09.BoxTest
 
 #go run jvmgo/ch02 java.lang.Object | grep -q "class data"
 #go run jvmgo/ch03 java.lang.Object | grep -q "this class: java/lang/Object"

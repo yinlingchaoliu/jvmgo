@@ -13,13 +13,59 @@ type ClassLoader struct {
 }
 
 // 创建一个类加载器
-//todo 添加测试信息
+//todo bootstrp ClassLoader启动类加载器
 func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
-	return &ClassLoader{
+	loader := &ClassLoader{
 		cp:          cp,
 		verboseFlag: verboseFlag, //添加测试标志
 		classMap:    make(map[string]*Class),
 	}
+
+	//先载入java.lang.Class
+	loader.loadBasicClasses()
+	//加载基本类型
+	loader.loadPrimitiveClasses()
+
+	return loader
+}
+
+//todo currentClass.jClass = object
+//  object.extra = currentClass
+// 互相引用便于查找
+func (self *ClassLoader) loadBasicClasses() {
+
+	//bootstrap loader 先加载 java/lang/Class
+	jlClass := self.LoadClass("java/lang/Class")
+	//互相引用 class与object ,便于互相查找
+	for _, class := range self.classMap {
+		if class.jClass == nil {
+			class.jClass = jlClass.NewObject() //新建object
+			class.jClass.extra = class         // object.extra 指向当前class
+		}
+	}
+
+}
+
+//加载基本类型
+func (self *ClassLoader) loadPrimitiveClasses() {
+	for primitiveType, _ := range primitiveTypes {
+		self.loadPrimitiveClass(primitiveType)
+	}
+}
+
+// void
+func (self *ClassLoader) loadPrimitiveClass(className string) {
+
+	class := &Class{
+		accessFlags: ACC_PUBLIC,
+		name:        className,
+		loader:      self,
+		initStarted: true,
+	}
+
+	class.jClass = self.classMap["java/lang/Class"].NewObject()
+	class.jClass.extra = class
+	self.classMap[className] = class
 }
 
 // 把类数据加载到方法区
@@ -28,13 +74,22 @@ func (self *ClassLoader) LoadClass(name string) *Class {
 		return class // 类已经加载
 	}
 
+	var class *Class
+
 	//数组类型
-	if name[0] == '['{
-		return self.loadArrayClass(name)
+	if name[0] == '[' {
+		class = self.loadArrayClass(name)
+	} else {
+		class = self.loadNonArrayClass(name)
 	}
 
-	//非数组类型
-	return self.loadNonArrayClass(name) // 普通类的数据来自于class文件，数组类的数据是jvm在运行期间动态生成的
+	//互相引用 class与object
+	if jlClass, ok := self.classMap["java/lang/Class"]; ok {
+		class.jClass = jlClass.NewObject()
+		class.jClass.extra = class
+	}
+
+	return class // 普通类的数据来自于class文件，数组类的数据是jvm在运行期间动态生成的
 }
 
 // 类加载过程
@@ -48,7 +103,6 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	}
 	return class
 }
-
 
 func (self *ClassLoader) loadArrayClass(name string) *Class {
 	class := &Class{
@@ -82,8 +136,6 @@ func (self *ClassLoader) defineClass(data []byte) *Class {
 	self.classMap[class.name] = class // 放入已加载列表
 	return class
 }
-
-
 
 // byte[] -> ClassFile -> Class
 func parseClass(data []byte) *Class {
@@ -194,8 +246,8 @@ func initStaticFinalVar(class *Class, field *Field) {
 			vars.SetDouble(slotId, val)
 		case "Ljava/lang/String;": //todo 支持字符串
 			goStr := cp.GetConstant(cpIndex).(string)
-			jStr := JString(class.Loader(),goStr)
-			vars.SetRef(slotId,jStr)
+			jStr := JString(class.Loader(), goStr)
+			vars.SetRef(slotId, jStr)
 		}
 	}
 }

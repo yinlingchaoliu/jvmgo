@@ -1,7 +1,6 @@
 package base
 
 import (
-	"fmt"
 	"main/rtda"
 	"main/rtda/heap"
 )
@@ -25,13 +24,13 @@ func InvokeMethod(invokerFrame *rtda.Frame, method *heap.Method) {
 		}
 	}
 
-	//hack
-	if method.IsNative() {
-		if method.Name() == "registerNatives" {
-			thread.PopFrame()
-		} else {
-			panic(fmt.Sprintf("native method: %v.%v%v\n",
-				method.Class().Name(), method.Name(), method.Descriptor()))
-		}
-	}
+	//todo native 移除 hack
+	//if method.IsNative() {
+	//	if method.Name() == "registerNatives" {
+	//		thread.PopFrame()
+	//	} else {
+	//		panic(fmt.Sprintf("native method: %v.%v%v\n",
+	//			method.Class().Name(), method.Name(), method.Descriptor()))
+	//	}
+	//}
 }

@@ -16,7 +16,7 @@ func JString(loader *ClassLoader, goStr string) *Object {
 	chars := stringToUtf16(goStr)
 
 	//加载 java类 char数组
-	jChars := &Object{loader.LoadClass("[C"), chars}
+	jChars := &Object{loader.LoadClass("[C"), chars,nil}
 
 	//加载java类 String
 	jStr := loader.LoadClass("java/lang/String").NewObject()

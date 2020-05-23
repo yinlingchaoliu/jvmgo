@@ -51,9 +51,14 @@ func lookupField(c *Class, name string, descriptor string) *Field {
 		}
 	}
 
-	// 从父类中找
-	if field := lookupField(c.superClass, name, descriptor); field != nil {
-		return field
+	//if field := lookupField(c.superClass, name, descriptor); field != nil {
+	//	return field
+	//}
+
+	// 从父类中找 todo native 增加super类判空
+	if c.superClass != nil {
+		return lookupField(c.superClass, name, descriptor)
 	}
+
 	return nil
 }

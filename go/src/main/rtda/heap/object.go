@@ -1,10 +1,11 @@
 package heap
 
-// 表示对象
+// 表示实例
 type Object struct {
 	class  *Class
 	//fields Slots
 	data interface{} //todo 数组对象 interface{}  = void*
+	extra interface{}  //todo native 记录额外信息 class
 }
 
 // 新创建的实例对象需要赋初值，go默认赋了
@@ -53,4 +54,8 @@ func (self *Object) GetIntVar(name, descriptor string) int32 {
 	field := self.class.getField(name, descriptor, false)
 	slots := self.data.(Slots)
 	return slots.GetInt(field.slotId)
+}
+
+func (self *Object) Extra() interface{} {
+	return self.extra
 }
