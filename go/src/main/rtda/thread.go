@@ -57,3 +57,12 @@ func (self *Thread) NewFrame(method *heap.Method) *Frame {
 func (self *Thread) NewTestFrame(maxLocals, maxStack uint) *Frame {
 	return newTestFrame(self, maxLocals, maxStack)
 }
+
+//获得当前线程所有栈 todo exception
+func (self *Thread) GetFrames() []*Frame {
+	return self.stack.getFrames()
+}
+
+func (self *Thread) ClearStack() {
+	self.stack.clear()
+}

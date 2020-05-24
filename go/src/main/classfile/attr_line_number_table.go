@@ -22,17 +22,20 @@ type LineNumberTableEntry struct {
 	lineNumber uint16
 }
 
-//todo 代码行号
+//读取行号信息
 func (self *LineNumberTableAttribute) readInfo(reader *ClassReader) {
-	lineNumberTable := make([]*LineNumberTableEntry, reader.readUint16())
-	for i := range lineNumberTable {
-		lineNumberTable[i] = &LineNumberTableEntry{
+	lineNumberTableLength := reader.readUint16()
+	//todo 将信息读取至当前内存 self至关重要
+	self.lineNumberTable = make([]*LineNumberTableEntry, lineNumberTableLength)
+	for i := range self.lineNumberTable {
+		self.lineNumberTable[i] = &LineNumberTableEntry{
 			startPc:    reader.readUint16(),
 			lineNumber: reader.readUint16(),
 		}
 	}
 }
 
+//NumberLine
 func (self *LineNumberTableAttribute) GetLineNumber(pc int) int {
 	for i := len(self.lineNumberTable) - 1; i >= 0; i-- {
 		entry := self.lineNumberTable[i]

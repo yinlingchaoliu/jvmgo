@@ -31,11 +31,12 @@ type CodeAttribute struct {
 	cp ConstantPool
 }
 
+//异常处理
 type ExceptionTableEntry struct {
-	startPc   uint16
-	endPc     uint16
-	handlerPc uint16
-	catchType uint16
+	startPc   uint16  //try {
+	endPc     uint16  // }
+	handlerPc uint16  //处理代码段
+	catchType uint16  //异常类符号
 }
 
 func (self *CodeAttribute) readInfo(reader *ClassReader) {
@@ -71,3 +72,34 @@ func (self *CodeAttribute) MaxLocals() uint {
 func (self *CodeAttribute) Code() []byte {
 	return self.code
 }
+
+func (self *CodeAttribute) ExceptionTable() []*ExceptionTableEntry {
+	return self.exceptionTable
+}
+
+func (self *CodeAttribute) LineNumberTableAttribute() *LineNumberTableAttribute {
+	for _, attrInfo := range self.attributes {
+		switch attrInfo.(type) {
+		case *LineNumberTableAttribute:
+			return attrInfo.(*LineNumberTableAttribute)
+		}
+	}
+	return nil
+}
+
+func (self *ExceptionTableEntry) StartPc() uint16 {
+	return self.startPc
+}
+
+func (self *ExceptionTableEntry) EndPc() uint16 {
+	return self.endPc
+}
+
+func (self *ExceptionTableEntry) HandlerPc() uint16 {
+	return self.handlerPc
+}
+
+func (self *ExceptionTableEntry) CatchType() uint16 {
+	return self.catchType
+}
+

@@ -110,3 +110,10 @@ func (self *OperandStack) PopBoolean() bool {
 func NewOperandStack(maxStack uint) *OperandStack {
 	return newOperandStack(maxStack)
 }
+
+func (self *OperandStack) Clear() {
+	self.size = 0
+	for i := range self.slots {
+		self.slots[i].ref = nil
+	}
+}

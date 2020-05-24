@@ -1,6 +1,8 @@
 package heap
 
-import "main/classfile"
+import (
+	"main/classfile"
+)
 
 type Method struct {
 	ClassMember
@@ -8,6 +10,8 @@ type Method struct {
 	maxLocals uint
 	code      []byte // 方法字节码表
 	argSlotCount uint // 参数个数
+	exceptionTable ExceptionTable //异常处理表
+	lineNumberTable * classfile.LineNumberTableAttribute
 }
 
 // 根据 classFile 创建 方法表
@@ -42,9 +46,12 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 		self.maxStack = codeAttr.MaxStack()
 		self.maxLocals = codeAttr.MaxLocals()
 		self.code = codeAttr.Code()
+		// todo 代码行号
+		self.lineNumberTable = codeAttr.LineNumberTableAttribute()
+		//todo exception 增加异常处理
+		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),self.class.constantPool)
 	}
 }
-
 
 func (self *Method) calcArgSlotCount(paramTypes []string) {
 	for _, paramType := range paramTypes {
@@ -113,3 +120,22 @@ func (self *ClassMember) IsAbstract() bool {
 	return 0 != self.accessFlags&ACC_ABSTRACT
 }
 
+//寻找异常处理句柄
+func (self *Method) FindExceptionHandler(exClass *Class, pc int) int {
+	handler := self.exceptionTable.findExceptionHandler(exClass, pc)
+	if handler != nil {
+		return handler.handlerPc
+	}
+	return -1
+}
+
+//获得行号
+func (self *Method) GetLineNumber(pc int) int {
+	if self.IsNative() {
+		return -2
+	}
+	if self.lineNumberTable == nil {
+		return -1
+	}
+	return self.lineNumberTable.GetLineNumber(pc)
+}

@@ -13,6 +13,7 @@ type Class struct {
 	constantPool      *ConstantPool // 运行时常量池
 	fields            []*Field      // 字段表
 	methods           []*Method     // 方法表
+	sourceFile        string		// 源文件名字
 	loader            *ClassLoader  // 类加载器
 	superClass        *Class        // 父类指针
 	interfaces        []*Class      // 实现的接口指针
@@ -32,6 +33,7 @@ func newClass(cf *classfile.ClassFile) *Class {
 	class.constantPool = newConstantPool(class, cf.ConstantPool())
 	class.fields = newFields(class, cf.Fields())
 	class.methods = newMethods(class, cf.Methods())
+	class.sourceFile = getSourceFile(cf)
 	return class
 }
 
@@ -203,4 +205,16 @@ func (self *Class) GetStaticMethod(name, descriptor string) *Method {
 
 func (self *Class) GetInstanceMethod(name, descriptor string) *Method {
 	return self.getMethod(name, descriptor, false)
+}
+
+func (self *Class) SourceFile() string {
+	return self.sourceFile
+}
+
+//todo execption 获得源文件名称
+func getSourceFile(cf *classfile.ClassFile) string {
+	if sfAttr := cf.SourceFileAttribute(); sfAttr != nil {
+		return sfAttr.FileName()
+	}
+	return "Unknown"
 }

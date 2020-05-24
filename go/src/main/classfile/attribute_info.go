@@ -50,7 +50,7 @@ func newAttributeInfo(attrName string, attrLen uint32, cp ConstantPool) Attribut
 		return &LocalVariableTypeTableAttribute{}
 	case "Signature":
 		return &SignatureAttribute{cp: cp}
-	case "sourceFile":
+	case "SourceFile": //todo exception 解析属性出错 属性标志必须完全匹配
 		return &SourceFileAttribute{cp: cp}
 	case "Synthetic":
 		return &SyntheticAttribute{}

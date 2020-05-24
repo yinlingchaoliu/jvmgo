@@ -45,7 +45,12 @@ export GOPATH=$PWD
 #go run main    -cp test/lib/example.jar   jvmgo.book.ch09.CloneTest
 
 #classloader 加载顺序
-go run main   -verbose:class  -cp test/lib/example.jar   jvmgo.book.ch09.TestLoadClass
+#go run main   -verbose:class  -cp test/lib/example.jar   jvmgo.book.ch09.TestLoadClass
+
+#exception 异常处理
+#go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  123
+#go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  abc
+go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest
 
 
 # todo 自动装箱和拆箱 第九章不处理

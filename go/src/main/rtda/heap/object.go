@@ -56,6 +56,12 @@ func (self *Object) GetIntVar(name, descriptor string) int32 {
 	return slots.GetInt(field.slotId)
 }
 
+//获得class
 func (self *Object) Extra() interface{} {
 	return self.extra
+}
+
+//设置class todo exception
+func (self *Object) SetExtra(extra interface{}) {
+	self.extra = extra
 }

@@ -145,9 +145,9 @@ var (
 	d2i = &D2I{}
 	d2l = &D2L{}
 	d2f = &D2F{}
-	//i2b           = &I2B{}
-	//i2c           = &I2C{}
-	//i2s           = &I2S{}
+	i2b           = &I2B{}
+	i2c           = &I2C{}
+	i2s           = &I2S{}
 	lcmp  = &LCMP{}
 	fcmpl = &FCMPL{}
 	fcmpg = &FCMPG{}
@@ -160,7 +160,7 @@ var (
 	areturn = &ARETURN{}
 	_return = &RETURN{}
 	//arraylength   = &ARRAY_LENGTH{}
-	//athrow        = &ATHROW{}
+	athrow        = &ATHROW{}
 	//monitorenter  = &MONITOR_ENTER{}
 	//monitorexit   = &MONITOR_EXIT{}
 	invoke_native = &INVOKE_NATIVE{}
@@ -458,12 +458,12 @@ func NewInstruction(opcode byte) base.Instruction {
 		return d2l
 	case 0x90:
 		return d2f
-	//case 0x91:
-	//	return i2b
-	//case 0x92:
-	//	return i2c
-	//case 0x93:
-	//	return i2s
+	case 0x91:
+		return i2b
+	case 0x92:
+		return i2c
+	case 0x93:
+		return i2s
 	case 0x94:
 		return lcmp
 	case 0x95:
@@ -550,8 +550,8 @@ func NewInstruction(opcode byte) base.Instruction {
 		return &ANEW_ARRAY{}
 	case 0xbe:
 		return &ARRAY_LENGTH{}
-	//case 0xbf:
-	//	return athrow
+	case 0xbf:
+		return athrow
 	case 0xc0:
 		return &CHECK_CAST{}
 	case 0xc1:
