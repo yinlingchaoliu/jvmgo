@@ -218,3 +218,26 @@ func getSourceFile(cf *classfile.ClassFile) string {
 	}
 	return "Unknown"
 }
+
+// getters
+func (self *Class) AccessFlags() uint16 {
+	return self.accessFlags
+}
+
+func (self *Class) GetFields(publicOnly bool) []*Field {
+	if publicOnly {
+		publicFields := make([]*Field, 0, len(self.fields))
+		for _, field := range self.fields {
+			if field.IsPublic() {
+				publicFields = append(publicFields, field)
+			}
+		}
+		return publicFields
+	} else {
+		return self.fields
+	}
+}
+
+func (self *Class) GetConstructor(descriptor string) *Method {
+	return self.GetInstanceMethod("<init>", descriptor)
+}

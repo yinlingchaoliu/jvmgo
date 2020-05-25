@@ -11,29 +11,9 @@ import (
 
 //正式实现
 //解释器 支持字符串参数
-func Interpret(method *heap.Method, logInst bool,args []string) {
-	thread := rtda.NewTread()        //创建线程
-	frame := thread.NewFrame(method) //创建栈帧
-	thread.PushFrame(frame)          //将栈帧push线程stack中
-
-	//字符串参数
-	jArgs := createArgsArray(method.Class().Loader(),args)
-	frame.LocalVars().SetRef(0,jArgs)
-
+func interpret(thread *rtda.Thread, logInst bool) {
 	defer catchErr(thread)
 	loop(thread, logInst)
-}
-
-//创建args数组
-func createArgsArray(loader *heap.ClassLoader, args []string) *heap.Object {
-	//加载class类
-	stringClass := loader.LoadClass("java/lang/String")
-	argsArr := stringClass.ArrayClass().NewArray(uint(len(args)))
-	jArgs := argsArr.Refs()
-	for i, arg := range args {
-		jArgs[i] = heap.JString(loader, arg)
-	}
-	return argsArr
 }
 
 //执行指令
@@ -97,6 +77,7 @@ func logInstruction(frame *rtda.Frame, inst base.Instruction) {
 }
 
 /*************测试函数***********/
+
 //解释器 外部不能访问 私有方法
 func interpretInfo(methodInfo *classfile.MemberInfo) {
 
@@ -133,6 +114,31 @@ func interpretReturn(method *heap.Method, logInst bool) {
 	loop(thread, logInst)
 }
 
+//测试字符串参数
+func interpretArgs(method *heap.Method, logInst bool,args []string) {
+	thread := rtda.NewTread()        //创建线程
+	frame := thread.NewFrame(method) //创建栈帧
+	thread.PushFrame(frame)          //将栈帧push线程stack中
+
+	//字符串参数
+	jArgs := createArgsArray(method.Class().Loader(),args)
+	frame.LocalVars().SetRef(0,jArgs)
+
+	defer catchErr(thread)
+	loop(thread, logInst)
+}
+
+//创建args数组
+func createArgsArray(loader *heap.ClassLoader, args []string) *heap.Object {
+	//加载class类
+	stringClass := loader.LoadClass("java/lang/String")
+	argsArr := stringClass.ArrayClass().NewArray(uint(len(args)))
+	jArgs := argsArr.Refs()
+	for i, arg := range args {
+		jArgs[i] = heap.JString(loader, arg)
+	}
+	return argsArr
+}
 
 //异常处理 因没有实现return指令 catch异常
 func catchFrameErr(frame *rtda.Frame) {

@@ -7,6 +7,8 @@ type ClassMember struct {
 	accessFlags uint16
 	name        string
 	descriptor  string
+	signature      string //
+	annotationData []byte // RuntimeVisibleAnnotations_attribute
 	class       *Class // 所属的类
 }
 
@@ -61,4 +63,20 @@ func (self *ClassMember) Descriptor() string {
 }
 func (self *ClassMember) Class() *Class {
 	return self.class
+}
+
+func (self *ClassMember) Type() *Class {
+	return self.class
+}
+
+func (self *ClassMember) AnnotationData() []byte {
+	return self.annotationData
+}
+
+func (self *ClassMember) Signature() string {
+	return self.signature
+}
+
+func (self *ClassMember) AccessFlags() uint16 {
+	return self.accessFlags
 }

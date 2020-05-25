@@ -210,7 +210,7 @@ func parseStringArgs(cmd *Cmd) {
 	mainMethod := mainClass.GetMainMethod()
 	if mainMethod != nil {
 		//增加命令行参数
-		Interpret(mainMethod, cmd.verboseInstFlag,cmd.args)
+		interpretArgs(mainMethod, cmd.verboseInstFlag,cmd.args)
 	} else {
 		fmt.Printf("Main method not found in class %s\n", cmd.class)
 	}

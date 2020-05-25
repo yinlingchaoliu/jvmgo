@@ -65,3 +65,7 @@ func (self *Object) Extra() interface{} {
 func (self *Object) SetExtra(extra interface{}) {
 	self.extra = extra
 }
+
+func (self *Object) Data() interface{} {
+	return self.data
+}

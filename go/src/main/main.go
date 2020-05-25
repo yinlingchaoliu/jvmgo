@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"main/classpath"
-	"main/rtda/heap"
-	"strings"
 )
 
 /**
@@ -44,18 +41,5 @@ func main() {
 
 //启动jvm
 func startJvm(cmd *Cmd) {
-	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
-	//获得classLoader
-	classLoader := heap.NewClassLoader(cp, cmd.verboseClassFlag)
-	//获得加载类名字
-	className := strings.Replace(cmd.class, ".", "/", -1)
-	mainClass := classLoader.LoadClass(className)
-	//获得main方法
-	mainMethod := mainClass.GetMainMethod()
-	if mainMethod != nil {
-		//增加命令行参数
-		Interpret(mainMethod, cmd.verboseInstFlag,cmd.args)
-	} else {
-		fmt.Printf("Main method not found in class %s\n", cmd.class)
-	}
+	newJVM(cmd).start()
 }

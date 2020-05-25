@@ -2,9 +2,13 @@ package reserved
 
 import (
 	"main/instructions/base"
-	"main/native"
 	"main/rtda"
+	"main/native"
 	_ "main/native/java/lang" //@todo init 注册
+	_ "main/native/sun/misc"  //@todo 注册VM
+	_ "main/native/sun/reflect"  //@todo 反射
+	_"main/native/java/security" //@todo doPrivileged
+	_"main/native/java/util/concurrent/atomic" //@todo juc
 )
 
 type INVOKE_NATIVE struct{ base.NoOperandsInstruction }

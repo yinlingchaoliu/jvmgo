@@ -1,6 +1,10 @@
 package lang
 
-import "main/native"
+import (
+	"main/instructions/base"
+	"main/native"
+	"strings"
+)
 import "main/rtda"
 import "main/rtda/heap"
 
@@ -12,6 +16,9 @@ func init() {
 	native.Register(jlClass, "desiredAssertionStatus0", "(Ljava/lang/Class;)Z", desiredAssertionStatus0)
 	native.Register(jlClass, "isInterface", "()Z", isInterface)
 	native.Register(jlClass, "isPrimitive", "()Z", isPrimitive)
+	native.Register(jlClass, "forName0", "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;", forName0)
+	native.Register(jlClass, "getDeclaredFields0", "(Z)[Ljava/lang/reflect/Field;", getDeclaredFields0)
+
 }
 
 // static native Class<?> getPrimitiveClass(String name);
@@ -65,4 +72,32 @@ func isPrimitive(frame *rtda.Frame) {
 
 	stack := frame.OperandStack()
 	stack.PushBoolean(class.IsPrimitive())
+}
+
+// private static native Class<?> forName0(String name, boolean initialize,
+//                                         ClassLoader loader,
+//                                         Class<?> caller)
+//     throws ClassNotFoundException;
+// (Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;
+func forName0(frame *rtda.Frame) {
+	vars := frame.LocalVars()
+	jName := vars.GetRef(0)
+	initialize := vars.GetBoolean(1)
+	//jLoader := vars.GetRef(2)
+
+	goName := heap.GoString(jName)
+	goName = strings.Replace(goName, ".", "/", -1)
+	goClass := frame.Method().Class().Loader().LoadClass(goName)
+	jClass := goClass.JClass()
+
+	if initialize && !goClass.InitStarted() {
+		// undo forName0
+		thread := frame.Thread()
+		frame.SetNextPC(thread.PC())
+		// init class
+		base.InitClass(thread, goClass)
+	} else {
+		stack := frame.OperandStack()
+		stack.PushRef(jClass)
+	}
 }

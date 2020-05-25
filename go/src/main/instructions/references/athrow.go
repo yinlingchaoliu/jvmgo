@@ -52,6 +52,9 @@ func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) {
 	thread.ClearStack()
 
 	jMsg := ex.GetRefVar("detailMessage", "Ljava/lang/String;")
+	if jMsg == nil {
+		return
+	}
 	goMsg := heap.GoString(jMsg)
 	println(ex.Class().JavaName() + ": " + goMsg)
 
@@ -62,4 +65,5 @@ func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) {
 		})
 		println("\tat " + ste.String())
 	}
+
 }

@@ -21,6 +21,7 @@ func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame) {
 		panic("java.lang.IncompatibleClassChangeError")
 	}
 	ref := frame.OperandStack().GetRefFromTop(resolveMethod.ArgSlotCount() - 1)
+
 	if ref == nil {
 		// hack!
 		if methodRef.Name() == "println" {
